@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Build and test
+        run: |
+          set -o pipefail
+          mvn -B verify 2>&1 | tee maven.log
+      - name: Report build errors
+        if: failure()
+        run: |
+          # Surface compiler/test errors as an annotation so they show on the run summary.
+          errors=$(grep -E '^\[ERROR\]|FAILURE!|Caused by:|Exception' maven.log | grep -v '^\[ERROR\] *$' | head -60 | cut -c1-400)
+          errors="${errors//'%'/'%25'}"
+          errors="${errors//$'\n'/'%0A'}"
+          echo "::error title=Maven build failed::${errors}"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build

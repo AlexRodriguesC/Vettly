@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: vettly-backend
+  datasource:
+    url: ${VETTLY_DB_URL:jdbc:postgresql://localhost:5432/vettly}
+    username: ${VETTLY_DB_USERNAME:vettly}
+    password: ${VETTLY_DB_PASSWORD:vettly}
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Schema is owned by Flyway (src/main/resources/db/migration); Hibernate only checks it.
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+server:
+  port: ${PORT:8080}
+
+vettly:
+  jwt:
+    # Base64-encoded key of at least 32 bytes. No default on purpose: set VETTLY_JWT_SECRET,
+    # or run with the "dev" profile for local development.
+    secret: ${VETTLY_JWT_SECRET:}
+    expiration: ${VETTLY_JWT_EXPIRATION:1h}
+    issuer: vettly
