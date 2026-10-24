@@ -43,7 +43,7 @@ class AuthFlowIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
         String token = JsonPath.read(body, "$.accessToken");
 
-        mvc.perform(get("/api/users/me").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        mvc.perform(get("/api/v1/users/me").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(email))
                 .andExpect(jsonPath("$.id").isNotEmpty());
@@ -92,25 +92,25 @@ class AuthFlowIntegrationTest {
 
     @Test
     void protectedEndpointsRequireAValidToken() throws Exception {
-        mvc.perform(get("/api/users/me"))
+        mvc.perform(get("/api/v1/users/me"))
                 .andExpect(status().isUnauthorized());
 
         String body = register(uniqueEmail(), PASSWORD).andReturn().getResponse().getContentAsString();
         String token = JsonPath.read(body, "$.accessToken");
         String tampered = token.substring(0, token.length() - 4) + "AAAA";
 
-        mvc.perform(get("/api/users/me").header(HttpHeaders.AUTHORIZATION, "Bearer " + tampered))
+        mvc.perform(get("/api/v1/users/me").header(HttpHeaders.AUTHORIZATION, "Bearer " + tampered))
                 .andExpect(status().isUnauthorized());
     }
 
     private ResultActions register(String email, String password) throws Exception {
-        return mvc.perform(post("/api/auth/register")
+        return mvc.perform(post("/api/v1/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(credentials(email, password)));
     }
 
     private ResultActions login(String email, String password) throws Exception {
-        return mvc.perform(post("/api/auth/login")
+        return mvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(credentials(email, password)));
     }

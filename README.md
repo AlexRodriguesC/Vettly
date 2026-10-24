@@ -47,11 +47,13 @@ Vettly is a full-stack web app for quickly finding relevant jobs and the matches
 
 ## Authentication API
 
+All endpoints are versioned in the URL path (`/api/v1/...`). A breaking change ships under a new prefix (`/api/v2/...`) while the old version keeps working.
+
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| `POST` | `/api/auth/register` | Public | Body `{ "email", "password" }` (password 8–72 chars). Returns `201` with a token, or `409` if the email is taken. |
-| `POST` | `/api/auth/login` | Public | Body `{ "email", "password" }`. Returns `200` with a token, or `401`. |
-| `GET` | `/api/users/me` | Bearer token | Returns the signed-in user. |
+| `POST` | `/api/v1/auth/register` | Public | Body `{ "email", "password" }` (password 8–72 chars). Returns `201` with a token, or `409` if the email is taken. |
+| `POST` | `/api/v1/auth/login` | Public | Body `{ "email", "password" }`. Returns `200` with a token, or `401`. |
+| `GET` | `/api/v1/users/me` | Bearer token | Returns the signed-in user. |
 
 Successful register/login responses look like:
 

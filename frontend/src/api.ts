@@ -44,21 +44,21 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export function register(email: string, password: string) {
-  return request<AuthResponse>('/api/auth/register', {
+  return request<AuthResponse>('/api/v1/auth/register', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   })
 }
 
 export function login(email: string, password: string) {
-  return request<AuthResponse>('/api/auth/login', {
+  return request<AuthResponse>('/api/v1/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   })
 }
 
 export function fetchCurrentUser(token: string) {
-  return request<User>('/api/users/me', {
+  return request<User>('/api/v1/users/me', {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
