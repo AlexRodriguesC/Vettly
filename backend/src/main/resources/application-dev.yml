@@ -1,0 +1,5 @@
+# Local development only. Activate with: mvn spring-boot:run -Dspring-boot.run.profiles=dev
+# Never use this key outside your machine; production must set VETTLY_JWT_SECRET.
+vettly:
+  jwt:
+    secret: A0MRPK+pgxCX/LAYroCutA4aB7iddQWySxEGOgWpVUeA/lpfjsf8y28lqVI+42Rq

@@ -1,0 +1,20 @@
+# Local development database. Start with: docker compose up -d
+services:
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: vettly
+      POSTGRES_USER: vettly
+      POSTGRES_PASSWORD: vettly
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vettly -d vettly"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
